@@ -55,10 +55,9 @@ def xmatrix(N):
 # min_row_col(m) => [min_row_idx, min_col_idx]
 # For example:
 
-def  min_row_col(M):
-    array =np.arange(M).reshape(3,3)
-
-
+def  min_row_col(m):
+    Result=[m.sum(axis=1).argmin(),m.sum(axis=0).argmin()]
+    return Result
 
 
 # m1 = np.array( [[0, 1, 2],
@@ -80,13 +79,6 @@ def  min_row_col(M):
 
 
 
-
-#sum(array[::2])*array[-1]
-
-
-def min_row_col(m):
-    return 0, 0  # min_row_ix, min_col_ix
-
 ## Task 4 ###################################################################### 
 # The `car_data` array holds reading from a car dashboard. The first column is
 # speed in km/h and the second column is engine rotation speed in revolutions
@@ -98,8 +90,9 @@ def min_row_col(m):
 #
 # FYI: The RPM gauge is called "tachometer"
 def fix_gauge_bias(car_data, speed_bias, rpm_bias):
-    return car_data
-
+    array = car_data[:,0:1] -speed_bias
+    array =np.concatenate([array,car_data[:,1:] - rpm_bias], axis=1)
+    return array
 ## Task 5
 # Continuing with car data from previous task. In most cars the ratio between
 # car speed and engine rotation speed only changes when the car shifts gears.
@@ -124,7 +117,10 @@ def fix_gauge_bias(car_data, speed_bias, rpm_bias):
 # such as continuously variable transmission (CVT) and the hybrid transmission
 # in Toyota Prius.
 def was_gear_switched(car_data):
-    return False
+    result = car_data  == no_shift
+    final =True
+    final = False  if result.all() == True else True
+    return final
 
 ## Task 6 (bonus) ##############################################################
 # With the same data and assumptions as Task 3 count how many different gears
@@ -138,7 +134,11 @@ def was_gear_switched(car_data):
 # HINT: take a look at np.unique() and array sort() functions, they might be
 # useful (depending on the strategy you choose).
 def count_gears_used(car_data):
-    return 1
+    result = car_data  == no_shift
+    final = 1
+    unique, counts = np.unique(result, return_counts=True)
+    final = 1  if result.all() == True else counts[0]+final
+    return final
 
     
 
