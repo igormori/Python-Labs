@@ -43,9 +43,10 @@ student_id = 101045762
 #        [1, 0, 0, 1]])
 
 def xmatrix(N):
-    matrix = np.eye(N,dtype=int)
-    matrix = matrix + np.eye(N,dtype=int)[::-1]
-    matrix[1:-1,1:-1] = 1
+    matrix = np.zeros((N,N),dtype=int)
+    for i in range(N):
+        matrix[i,i] =1
+        matrix[i,-i -1] =1
 
     return matrix
 
@@ -56,8 +57,8 @@ def xmatrix(N):
 # For example:
 
 def  min_row_col(m):
-    Result=[m.sum(axis=1).argmin(),m.sum(axis=0).argmin()]
-    return Result
+    result=[m.sum(axis=1).argmin(),m.sum(axis=0).argmin()]
+    return result
 
 
 # m1 = np.array( [[0, 1, 2],
@@ -117,10 +118,10 @@ def fix_gauge_bias(car_data, speed_bias, rpm_bias):
 # such as continuously variable transmission (CVT) and the hybrid transmission
 # in Toyota Prius.
 def was_gear_switched(car_data):
-    result = car_data  == no_shift
-    final =True
-    final = False  if result.all() == True else True
-    return final
+    decrease = car_data[:,1]/car_data[:,0]
+    for x in range(len(decrease)-1):
+        result =  abs(decrease[x] - decrease[x+1])/decrease[x]*100>=10
+        return result
 
 ## Task 6 (bonus) ##############################################################
 # With the same data and assumptions as Task 3 count how many different gears
@@ -134,11 +135,8 @@ def was_gear_switched(car_data):
 # HINT: take a look at np.unique() and array sort() functions, they might be
 # useful (depending on the strategy you choose).
 def count_gears_used(car_data):
-    result = car_data  == no_shift
-    final = 1
-    unique, counts = np.unique(result, return_counts=True)
-    final = 1  if result.all() == True else counts[0]+final
-    return final
+    uniqueValues = np.unique(car_data[:,1]//car_data[:,0])
+    return len(uniqueValues)-1
 
     
 
